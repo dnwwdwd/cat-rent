@@ -2,7 +2,7 @@
   <a-layout class="layout" style="min-height: 100vh; display: flex; flex-direction: column;">
     <a-layout-header :style="{ background: '#fff', display: 'flex', alignItems: 'center', marginBottom: '24px' }">
       <img src="../assets/logo.png" alt="Logo" style="height: 40px; margin-right: 20px" />
-      <span style="font-size: 15px; color: #1E90FF">江苏牧职宠物管理系统</span>
+      <span style="font-size: 15px; color: #1E90FF">基于Java的汽车租赁平台</span>
       <!-- 动态高亮菜单项 -->
       <a-menu
           :selectedKeys="selectedKeys"

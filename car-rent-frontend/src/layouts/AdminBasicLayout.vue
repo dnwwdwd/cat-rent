@@ -3,7 +3,7 @@
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px; margin-bottom: 5px;">
         <img src="../assets/logo.png" width="52" height="50" style="margin-right: 10px;"/>
-        <span style="color: pink">江苏牧职宠物管理系统</span>
+        <span style="color: pink">基于Java的汽车租赁平台</span>
       </div>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="1">

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qww.carrent.mapper.CarDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.qww.carrent.model.entity.CarDetail">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="carNumber" column="carNumber" jdbcType="VARCHAR"/>
+            <result property="mileage" column="mileage" jdbcType="INTEGER"/>
+            <result property="quality" column="quality" jdbcType="VARCHAR"/>
+            <result property="rentPrice" column="rentPrice" jdbcType="DECIMAL"/>
+            <result property="color" column="color" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,carNumber,mileage,
+        quality,rentPrice,color,
+        status
+    </sql>
+</mapper>

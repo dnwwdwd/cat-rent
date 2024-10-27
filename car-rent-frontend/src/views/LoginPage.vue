@@ -2,7 +2,7 @@
   <div style="height: 60px">
   </div>
   <div style="display: flex; align-items: center; margin-bottom: 30px;;justify-content: center">
-    <span style="margin-left: 10px; font-size: 30px">江苏牧职宠物管理系统</span>
+    <span style="margin-left: 10px; font-size: 30px">基于Java的汽车租赁平台</span>
   </div>
 
   <div style="display: flex; justify-content: center;">
