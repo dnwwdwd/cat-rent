@@ -9,7 +9,6 @@ import com.qww.carrent.common.ResultUtils;
 import com.qww.carrent.constant.UserConstant;
 import com.qww.carrent.exception.BusinessException;
 import com.qww.carrent.exception.ThrowUtils;
-import com.mmww.coderanker.model.dto.user.*;
 import com.qww.carrent.model.dto.user.*;
 import com.qww.carrent.model.entity.User;
 import com.qww.carrent.model.vo.LoginUserVO;
@@ -123,7 +122,7 @@ public class UserController {
      */
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
+    public BaseResponse<Integer> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
         if (userAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

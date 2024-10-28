@@ -6,18 +6,21 @@
 
     <resultMap id="BaseResultMap" type="com.qww.carrent.model.entity.Car">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="brand" column="brand" jdbcType="VARCHAR"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
-            <result property="imgUrl" column="imgUrl" jdbcType="VARCHAR"/>
-            <result property="stock" column="stock" jdbcType="INTEGER"/>
+            <result property="carNumber" column="carNumber" jdbcType="VARCHAR"/>
+            <result property="mileage" column="mileage" jdbcType="INTEGER"/>
+            <result property="quality" column="quality" jdbcType="VARCHAR"/>
+            <result property="rentPrice" column="rentPrice" jdbcType="DECIMAL"/>
+            <result property="color" column="color" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,brand,type,
-        imgUrl,stock,createTime,
-        updateTime,isDelete
+        id,carNumber,mileage,
+        quality,rentPrice,color,
+        status,createTime,updateTime,
+        isDelete
     </sql>
 </mapper>

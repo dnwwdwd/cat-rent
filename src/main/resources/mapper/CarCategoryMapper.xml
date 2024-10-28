@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qww.carrent.mapper.CarCategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.qww.carrent.model.entity.CarCategory">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="brand" column="brand" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="imgUrl" column="imgUrl" jdbcType="VARCHAR"/>
+            <result property="stock" column="stock" jdbcType="INTEGER"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,brand,type,
+        imgUrl,stock,createTime,
+        updateTime,isDelete
+    </sql>
+</mapper>

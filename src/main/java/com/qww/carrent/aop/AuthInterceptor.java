@@ -4,12 +4,8 @@ import com.qww.carrent.annotation.AuthCheck;
 import com.qww.carrent.common.ErrorCode;
 import com.qww.carrent.exception.BusinessException;
 import com.qww.carrent.model.entity.User;
-import com.qww.carrent.service.UserService;
 import com.qww.carrent.model.enums.UserRoleEnum;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.qww.carrent.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,6 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限校验 AOP

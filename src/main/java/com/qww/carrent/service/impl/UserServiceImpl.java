@@ -1,32 +1,31 @@
 package com.qww.carrent.service.impl;
 
-import static com.qww.carrent.constant.UserConstant.USER_LOGIN_STATE;
-
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qww.carrent.common.ErrorCode;
-import com.qww.carrent.model.entity.User;
-import com.qww.carrent.utils.SqlUtils;
 import com.qww.carrent.constant.CommonConstant;
 import com.qww.carrent.exception.BusinessException;
 import com.qww.carrent.mapper.UserMapper;
 import com.qww.carrent.model.dto.user.UserQueryRequest;
+import com.qww.carrent.model.entity.User;
 import com.qww.carrent.model.enums.UserRoleEnum;
 import com.qww.carrent.model.vo.LoginUserVO;
 import com.qww.carrent.model.vo.UserVO;
 import com.qww.carrent.service.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-
+import com.qww.carrent.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.qww.carrent.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户服务实现
