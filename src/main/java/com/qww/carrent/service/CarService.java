@@ -2,6 +2,7 @@ package com.qww.carrent.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qww.carrent.model.entity.Car;
+import com.qww.carrent.model.vo.CarVO;
 
 /**
 * @author hejiajun
@@ -10,4 +11,5 @@ import com.qww.carrent.model.entity.Car;
 */
 public interface CarService extends IService<Car> {
 
+    CarVO getCarDetailById(Integer id);
 }

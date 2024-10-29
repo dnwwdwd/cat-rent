@@ -19,10 +19,10 @@
       @finishFailed="onFinishFailed"
   >
     <a-form-item
-        name="username"
+        name="userAccount"
         :rules="[{ required: true, message: '请输入账号' }]"
     >
-      <a-input v-model:value="formState.username" placeholder="请输入账号">
+      <a-input v-model:value="formState.userAccount" placeholder="请输入账号">
         <template #prefix>
           <UserOutlined class="site-form-item-icon" />
         </template>
@@ -30,10 +30,10 @@
     </a-form-item>
 
     <a-form-item
-        name="password"
+        name="userPassword"
         :rules="[{ required: true, message: '请输入密码' }]"
     >
-      <a-input-password v-model:value="formState.password" placeholder="请输入密码">
+      <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码">
         <template #prefix>
           <LockOutlined class="site-form-item-icon" />
         </template>
@@ -61,28 +61,28 @@ import myAxios from "../plugins/myAxios.js";
 
 const router = useRouter();
 interface FormState {
-  username: string;
-  password: string;
+  userAccount: string;
+  userPassword: string;
 }
 const formState = ref({
-  username: '',
-  password: '',
+  userAccount: '',
+  userPassword: '',
 });
 
 const activeKey = ref('login-tab');
 
 // 登录失败将值清空
 function loginFailed() {
-  // 在登录失败后重置 username 和 password 的值为空
-  formState.value.username = '';
-  formState.value.password = '';
+  // 在登录失败后重置 userAccount 和 userPassword 的值为空
+  formState.value.userAccount = '';
+  formState.value.userPassword = '';
 }
 
 const onFinish = async (values: any) => {
   console.log(values)
   const res : any = await myAxios.post('/user/login', {
-    username: values.username,
-    password: values.password,
+    userAccount: values.userAccount,
+    userPassword: values.userPassword,
   });
   if (res.code === 0) {
     message.success('登录成功！');

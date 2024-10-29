@@ -1,10 +1,17 @@
 package com.qww.carrent.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qww.carrent.common.ResultUtils;
 import com.qww.carrent.mapper.CarMapper;
 import com.qww.carrent.model.entity.Car;
+import com.qww.carrent.model.entity.CarCategory;
+import com.qww.carrent.model.vo.CarVO;
+import com.qww.carrent.service.CarCategoryService;
 import com.qww.carrent.service.CarService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
 * @author hejiajun
@@ -15,6 +22,18 @@ import org.springframework.stereotype.Service;
 public class CarServiceImpl extends ServiceImpl<CarMapper, Car>
     implements CarService {
 
+    @Resource
+    private CarCategoryService carCategoryService;
+
+    @Override
+    public CarVO getCarDetailById(Integer id) {
+        Car car = this.getById(id);
+        CarVO carVO = new CarVO();
+        BeanUtils.copyProperties(car, carVO);
+        CarCategory carCategory = carCategoryService.getById(car.getCarCategoryId());
+        BeanUtils.copyProperties(carCategory, carVO);
+        return carVO;
+    }
 }
 
 

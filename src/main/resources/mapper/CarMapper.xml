@@ -6,9 +6,11 @@
 
     <resultMap id="BaseResultMap" type="com.qww.carrent.model.entity.Car">
             <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="carCategoryId" column="carCategoryId" jdbcType="INTEGER"/>
             <result property="carNumber" column="carNumber" jdbcType="VARCHAR"/>
             <result property="mileage" column="mileage" jdbcType="INTEGER"/>
             <result property="quality" column="quality" jdbcType="VARCHAR"/>
+            <result property="imgUrl" column="imgUrl" jdbcType="VARCHAR"/>
             <result property="rentPrice" column="rentPrice" jdbcType="DECIMAL"/>
             <result property="color" column="color" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="TINYINT"/>

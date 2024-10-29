@@ -1,4 +1,4 @@
-package com.qww.carrent.model.request;
+package com.qww.carrent.model.vo;
 
 import lombok.Data;
 
@@ -6,10 +6,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
-public class CarAddRequest implements Serializable {
-    /**
-     * id
-     */
+public class CarVO implements Serializable {
+
     private Integer id;
 
     private Integer carCategoryId;
@@ -48,4 +46,21 @@ public class CarAddRequest implements Serializable {
      * 状态（0 - 未出租 1 - 已出租）
      */
     private Integer status;
+
+    /**
+     * 品牌
+     */
+    private String brand;
+
+    /**
+     * 车型
+     */
+    private String type;
+
+    /**
+     * 库存数量
+     */
+    private Integer stock;
+
+    private static final long serialVersionUID = 1L;
 }

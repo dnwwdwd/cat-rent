@@ -2,8 +2,10 @@ package com.qww.carrent.model.request;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class CarCategoryAddRequest {
+public class CarCategoryAddRequest implements Serializable {
 
     /**
      * id

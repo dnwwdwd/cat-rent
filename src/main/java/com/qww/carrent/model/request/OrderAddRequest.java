@@ -2,31 +2,17 @@ package com.qww.carrent.model.request;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class OrderAddRequest {
+public class OrderAddRequest implements Serializable {
 
     /**
-     * id
+     * 汽车id
      */
-    private Integer id;
-
-    /**
-     * 汽车详情id
-     */
-    private Integer carDetailId;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 总价格
-     */
-    private BigDecimal totalPrice;
+    private Integer carId;
 
     /**
      * 租赁开始时间
@@ -39,9 +25,14 @@ public class OrderAddRequest {
     private Date rentalEndDate;
 
     /**
-     * 状态
+     * 联系方式
      */
-    private Integer status;
+    private String phone;
+
+    /**
+     * 家庭地址
+     */
+    private String address;
 
     private static final long serialVersionUID = 1L;
 

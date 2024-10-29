@@ -41,6 +41,10 @@ public class User implements Serializable {
      */
     private String userAvatar;
 
+    private String address;
+
+    private String phone;
+
     /**
      * 用户角色：user/admin/ban
      */

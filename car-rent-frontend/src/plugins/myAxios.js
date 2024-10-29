@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const myAxios = axios.create({
-    baseURL: 'http://localhost:9090/api',
+    baseURL: 'http://localhost:8101/api',
 })
 
 myAxios.defaults.withCredentials = true; //设置为true

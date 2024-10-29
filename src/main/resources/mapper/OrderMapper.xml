@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.qww.carrent.model.entity.Order">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="carDetailId" column="carDetailId" jdbcType="INTEGER"/>
+            <result property="carId" column="carId" jdbcType="INTEGER"/>
             <result property="userId" column="userId" jdbcType="INTEGER"/>
             <result property="totalPrice" column="totalPrice" jdbcType="DECIMAL"/>
             <result property="rentalStartDate" column="rentalStartDate" jdbcType="TIMESTAMP"/>

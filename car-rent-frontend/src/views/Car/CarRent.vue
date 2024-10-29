@@ -1,7 +1,7 @@
 <template>
   <div style="max-width: 80%">
     <a-flex wrap="wrap" gap="small">
-      <a-card hoverable style="width: 220px;" v-for="car in carList" @click="router.push(`/car/detail/${car.id}`)">
+      <a-card hoverable style="width: 220px;" v-for="car in carList" @click="router.push(`/car/rent/detail/${car.id}`)">
         <template #cover>
           <img
               alt="汽车"
@@ -9,7 +9,7 @@
               style="height: 180px"
           />
         </template>
-        <a-card-meta :title="car.carNumber" :description="`里程数：${car.mileage} 成色：${car.quality} mileage：${car.rentPrice}`">
+        <a-card-meta :title="car.carNumber" :description="`成色：${car.quality} 单日租车价格：${car.rentPrice}`">
         </a-card-meta>
       </a-card>
     </a-flex>
@@ -18,8 +18,8 @@
 
 <script setup lang="js">
 import {onMounted, ref} from "vue";
+import myAxios from "../../plugins/myAxios.js";
 import {useRouter} from "vue-router";
-import myAxios from "../plugins/myAxios.js";
 
 const router = useRouter();
 

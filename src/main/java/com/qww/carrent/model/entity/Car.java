@@ -4,52 +4,58 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Data;
 
 /**
- * 订单表
- * @TableName order
+ * 汽车详情表
+ * @TableName car
  */
-@TableName(value ="`order`")
+@TableName(value ="car")
 @Data
-public class Order implements Serializable {
+public class Car implements Serializable {
     /**
      * id
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * 汽车详情id
-     */
-    private Integer carId;
+    private Integer carCategoryId;
 
     /**
-     * 用户id
+     * 车牌号
      */
-    private Integer userId;
+    private String carNumber;
 
     /**
-     * 总价格
+     * 行驶里程（单位：km）
      */
-    private BigDecimal totalPrice;
+    private Integer mileage;
 
     /**
-     * 租赁开始时间
+     * 成色
      */
-    private Date rentalStartDate;
+    private String quality;
 
     /**
-     * 租赁结束时间
+     * 图片链接
      */
-    private Date rentalEndDate;
+    private String imgUrl;
 
     /**
-     * 状态
+     * 单日租车价格
+     */
+    private BigDecimal rentPrice;
+
+    /**
+     * 颜色
+     */
+    private String color;
+
+    /**
+     * 状态（0 - 未出租 1 - 已出租）
      */
     private Integer status;
 

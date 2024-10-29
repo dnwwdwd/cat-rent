@@ -30,10 +30,10 @@
       </a-input>
     </a-form-item>
     <a-form-item
-        name="username"
+        name="userAccount"
         :rules="[{ required: true, message: '请输入账号' }]"
     >
-      <a-input v-model:value="formState.username" placeholder="请输入账号">
+      <a-input v-model:value="formState.userAccount" placeholder="请输入账号">
         <template #prefix>
           <UserOutlined class="site-form-item-icon" />
         </template>
@@ -41,10 +41,10 @@
     </a-form-item>
 
     <a-form-item
-        name="password"
+        name="userPassword"
         :rules="[{ required: true, message: '请输入密码' }]"
     >
-      <a-input-password v-model:value="formState.password" placeholder="请输入密码">
+      <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码">
         <template #prefix>
           <LockOutlined class="site-form-item-icon" />
         </template>
@@ -83,25 +83,25 @@ import myAxios from "../plugins/myAxios.js";
 const router = useRouter();
 
 const formState = ref({
-  username: '',
-  password: '',
+  userAccount: '',
+  userPassword: '',
   checkPassword: '',
-  nickname: '',
+  userName: '',
 });
 
 const activeKey = ref('register-tab');
 
 const onFinish = async (values) => {
   const res = await myAxios.post('/user/register', {
-    username: values.username,
-    password: values.password,
+    userAccount: values.userAccount,
+    userPassword: values.userPassword,
     checkPassword: values.checkPassword,
     nickname: values.nickname,
   });
   if (res.code === 0) {
     message.success('注册成功！');
     router.push({
-      path: '/login',
+      path: '/user/login',
     });
   } else {
     message.error('注册失败' + `${res.message ? `, ${res.message}` : ''}`);
@@ -111,8 +111,8 @@ const onFinish = async (values) => {
 
 function registerFailed() {
   // 在注册失败后重置输入框的值为空
-  formState.username = '';
-  formState.password = '';
+  formState.userAccount = '';
+  formState.userPassword = '';
   formState.checkPassword = '';
   formState.nickname = '';
 }

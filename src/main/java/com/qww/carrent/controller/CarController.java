@@ -6,7 +6,10 @@ import com.qww.carrent.common.DeleteRequest;
 import com.qww.carrent.common.ResultUtils;
 import com.qww.carrent.constant.UserConstant;
 import com.qww.carrent.model.entity.Car;
+import com.qww.carrent.model.entity.CarCategory;
 import com.qww.carrent.model.request.CarAddRequest;
+import com.qww.carrent.model.vo.CarVO;
+import com.qww.carrent.service.CarCategoryService;
 import com.qww.carrent.service.CarService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,9 @@ public class CarController {
 
     @Resource
     private CarService carService;
+
+    @Resource
+    private CarCategoryService carCategoryService;
 
 
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
@@ -53,4 +59,9 @@ public class CarController {
         return ResultUtils.success(carList);
     }
 
+    @GetMapping("/detail/{id}")
+    public BaseResponse<CarVO> detail(@PathVariable Integer id) {
+        CarVO carVO = carService.getCarDetailById(id);
+        return ResultUtils.success(carVO);
+    }
 }

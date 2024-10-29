@@ -8,6 +8,8 @@
         <result property="userName" column="userName" jdbcType="VARCHAR"/>
         <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
         <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
         <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
@@ -16,6 +18,6 @@
     <sql id="Base_Column_List">
         id,
         userName,userAvatar,
-        userRole,createTime,updateTime,isDelete
+        userRole,address,phone,createTime,updateTime,isDelete
     </sql>
 </mapper>
