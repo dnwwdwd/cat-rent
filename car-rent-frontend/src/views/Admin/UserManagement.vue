@@ -4,27 +4,21 @@
   </a-button>
   <a-modal v-model:open="open" title="添加用户" @ok="handleOk" cancelText="取消" okText="确认添加">
     账号：
-    <a-input v-model:value="formModal.username" class="a-input"/>
+    <a-input v-model:value="formModal.userAccount" class="a-input"/>
     密码：
-    <a-input v-model:value="formModal.password" class="a-input"/>
+    <a-input v-model:value="formModal.userPassword" class="a-input"/>
     昵称：
-    <a-input v-model:value="formModal.nickname" class="a-input"/>
-    邮箱：
-    <a-input v-model:value="formModal.email" class="a-input"/>
+    <a-input v-model:value="formModal.userName" class="a-input"/>
     手机号：
     <a-input v-model:value="formModal.phone" class="a-input"/>
-    地址：
+    家庭住址：
     <a-input v-model:value="formModal.address" class="a-input"/>
     头像：
-    <a-input v-model:value="formModal.avatarUrl" class="a-input"/>
-    性别：
-    <a-input v-model:value="formModal.sex" class="a-input"/>
-    生日：
-    <a-input v-model:value="formModal.birth" class="a-input"/>
+    <a-input v-model:value="formModal.userAvatar" class="a-input"/>
   </a-modal>
   <a-table :columns="columns" :data-source="dataSource" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['username', 'password', 'nickname', 'email', 'phone', 'address', 'avatarUrl', 'sex', 'birth'].includes(column.dataIndex)">
+      <template v-if="['userAccount', 'userPassword' ,'userName', 'userAvatar', 'phone', 'address'].includes(column.dataIndex)">
         <div>
           <a-input
               v-if="editableData[record.key]"
@@ -32,7 +26,7 @@
               style="margin: -5px 0"
           />
           <template v-else>
-            <template v-if="column.dataIndex === 'avatarUrl'">
+            <template v-if="column.dataIndex === 'userAvatar'">
               <a-image :src="text" :height="150" :width="150"/>
             </template>
             <template v-else>
@@ -73,22 +67,17 @@ import {message} from "ant-design-vue";
 const columns = [
   {
     title: '账号',
-    dataIndex: 'username',
+    dataIndex: 'userAccount',
     width: '10%',
   },
   {
     title: '密码',
-    dataIndex: 'password',
+    dataIndex: 'userPassword',
     width: '10%',
   },
   {
     title: '昵称',
-    dataIndex: 'nickname',
-    width: '10%',
-  },
-  {
-    title: '邮箱',
-    dataIndex: 'email',
+    dataIndex: 'userName',
     width: '10%',
   },
   {
@@ -97,23 +86,13 @@ const columns = [
     width: '10%',
   },
   {
-    title: '地址',
+    title: '家庭住址',
     dataIndex: 'address',
     width: '10%',
   },
   {
     title: '头像',
-    dataIndex: 'avatarUrl',
-    width: '10%',
-  },
-  {
-    title: '性别',
-    dataIndex: 'sex',
-    width: '10%',
-  },
-  {
-    title: '生日',
-    dataIndex: 'birth',
+    dataIndex: 'userAvatar',
     width: '10%',
   },
   {
@@ -140,7 +119,7 @@ const save = async (key) => {
   // 请求后端更新数据
   const res = await myAxios.post('/user/update', editedData);
   if (res.code === 0) {
-    Object.assign(dataSource.value.find(item => item.key === key), editedData);
+    loadData();
     message.success('修改成功');
   } else {
     message.error('修改失败');
@@ -171,15 +150,12 @@ const onDelete = async (key) => {
 };
 
 const formModal = ref({
-  username: '',
-  password: '',
-  nickname: '',
-  email: '',
+  userAccount: '',
+  userPassword: '',
+  userName: '',
+  userAvatar: '',
   phone: '',
   address: '',
-  avatarUrl: '',
-  sex: '',
-  birth: '',
 });
 
 // 添加表格项

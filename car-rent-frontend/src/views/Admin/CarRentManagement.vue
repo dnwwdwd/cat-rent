@@ -1,12 +1,28 @@
 <template>
-  <a-button type="primary" class="editable-add-btn" style="margin-bottom: 8px; margin-top: 12px" @click="handleAdd">添加宠物领养</a-button>
-  <a-modal v-model:open="open" title="添加宠物领养" @ok="handleOk" cancelText="取消" okText="确认添加">
-    捐赠宠物 ID：<a-input v-model:value="formModal.petId" class="a-input"/>
-    领养人 ID：<a-input v-model:value="formModal.userId" class="a-input"/>
+  <a-button type="primary" class="editable-add-btn" style="margin-bottom: 8px; margin-top: 12px" @click="handleAdd">添加汽车租赁</a-button>
+  <a-modal v-model:open="open" title="添加汽车租赁" @ok="handleOk" cancelText="取消" okText="确认添加">
+    车牌号：<a-input v-model:value="formModal.carNumber" class="a-input"/>
+    里程数：<a-input v-model:value="formModal.mileage" class="a-input"/>
+    成色：<a-input v-model:value="formModal.quality" class="a-input"/>
+    图片：<a-input v-model:value="formModal.imgUrl" class="a-input"/>
+    日租价格：<a-input v-model:value="formModal.rentPrice" class="a-input"/>
+    颜色：<a-input v-model:value="formModal.color" class="a-input"/>
+    <div style="margin-top: 10px; margin-bottom: 10px">
+      汽车分类 ID：
+      <a-select
+          v-model:value="formModal.carCategoryId"
+          style="width: 200px"
+          placeholder="请选择汽车分类的 ID"
+      >
+        <a-select-option v-for="id in idList" :key="id" :value="id">
+          {{ id }}
+        </a-select-option>
+      </a-select>
+    </div>
   </a-modal>
   <a-table :columns="columns" :data-source="dataSource" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['petId', 'userId'].includes(column.dataIndex)">
+      <template v-if="['carCategoryId', 'carNumber', 'mileage', 'quality', 'imgUrl', 'rentPrice', 'color'].includes(column.dataIndex)">
         <div>
           <a-input
               v-if="editableData[record.key]"
@@ -14,7 +30,12 @@
               style="margin: -5px 0"
           />
           <template v-else>
-            {{ text }}
+            <template v-if="column.dataIndex === 'imgUrl'">
+              <a-image :src="text" :height="150" :width="150"/>
+            </template>
+            <template v-else>
+              {{ text }}
+            </template>
           </template>
         </div>
       </template>
@@ -41,28 +62,54 @@
 </template>
 
 <script setup>
-import {cloneDeep} from 'lodash-es';
-import {onMounted, reactive, ref} from 'vue';
+import { cloneDeep } from 'lodash-es';
+import {reactive, ref, computed, onMounted} from 'vue';
 import myAxios from "../../plugins/myAxios.js";
 import {message} from "ant-design-vue";
 
 // 表格列定义
 const columns = [
   {
-    title: '捐赠宠物 ID',
-    dataIndex: 'petId',
-    width: '30%',
+    title: '汽车分类 ID',
+    dataIndex: 'carCategoryId',
+    width: '10%',
   },
   {
-    title: '领养人 ID',
-    dataIndex: 'userId',
-    width: '30%',
+    title: '车牌号',
+    dataIndex: 'carNumber',
+    width: '10%',
+  },
+  {
+    title: '里程数',
+    dataIndex: 'mileage',
+    width: '10%',
+  },
+  {
+    title: '成色',
+    dataIndex: 'quality',
+    width: '10%',
+  },
+  {
+    title: '图片',
+    dataIndex: 'imgUrl',
+    width: '10%',
+  },
+  {
+    title: '日租价格',
+    dataIndex: 'rentPrice',
+    width: '10%',
+  },
+  {
+    title: '颜色',
+    dataIndex: 'color',
+    width: '10%',
   },
   {
     title: '操作',
     dataIndex: 'operation',
-    width: '20%'
+    width: '15%',
   },
+
 ];
 
 // 响应式数据源
@@ -80,7 +127,7 @@ const save = async (key) => {
   // 编辑保存后的新值
   const editedData = editableData[key];
   // 请求后端更新数据
-  const res = await myAxios.post('/adopt/update', editedData);
+  const res = await myAxios.post('/car/update', editedData);
   if (res.code === 0) {
     Object.assign(dataSource.value.find(item => item.key === key), editedData);
     message.success('修改成功');
@@ -99,7 +146,7 @@ const cancel = (key) => {
 const onDelete = async (key) => {
   const item = dataSource.value.find(item => item.key === key);
   // 请求后端删除数据
-  const res = await myAxios.post('/adopt/delete', {
+  const res = await myAxios.post('/car/delete', {
     id: item.id,
   });
   if (res.code === 0) {
@@ -111,9 +158,16 @@ const onDelete = async (key) => {
 };
 
 const formModal = ref({
-  petId: '',
-  userId: '',
+  carCategoryId: '',
+  carNumber: '',
+  mileage: '',
+  quality: '',
+  imgUrl: '',
+  rentPrice: '',
+  color: '',
 });
+
+const idList = ref([]);
 
 // 添加表格项
 const handleAdd = () => {
@@ -122,7 +176,7 @@ const handleAdd = () => {
 
 const handleOk = async () => {
     // 请求后端，添加表格项
-    const result = await myAxios.post('/adopt/add', formModal.value);
+    const result = await myAxios.post('/car/add', formModal.value);
     if (result.code == 0) {
       message.success('添加成功');
       open.value = false;
@@ -134,12 +188,17 @@ const handleOk = async () => {
 };
 
 const loadData = async () => {
-  const res = await myAxios.get('/adopt/list');
+  const res = await myAxios.get('/car/list');
   if (res.code === 0) {
     dataSource.value = res.data.map((item, index) => ({
       ...item,
       key: index,
     }));
+  }
+  const response = await myAxios.get('/car_category/list/id');
+  if (response.code === 0) {
+   idList.value = response.data;
+    console.log(idList)
   }
 };
 

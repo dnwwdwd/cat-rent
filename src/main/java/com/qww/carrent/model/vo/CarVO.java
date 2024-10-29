@@ -62,5 +62,7 @@ public class CarVO implements Serializable {
      */
     private Integer stock;
 
+    private BigDecimal averagePrice;
+
     private static final long serialVersionUID = 1L;
 }

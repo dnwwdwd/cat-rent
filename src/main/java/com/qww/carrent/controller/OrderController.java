@@ -8,11 +8,13 @@ import com.qww.carrent.common.PageRequest;
 import com.qww.carrent.common.ResultUtils;
 import com.qww.carrent.constant.UserConstant;
 import com.qww.carrent.model.entity.Car;
+import com.qww.carrent.model.entity.CarCategory;
 import com.qww.carrent.model.entity.Order;
 import com.qww.carrent.model.entity.User;
 import com.qww.carrent.model.request.OrderAddRequest;
 import com.qww.carrent.model.vo.CarVO;
 import com.qww.carrent.model.vo.OrderVO;
+import com.qww.carrent.service.CarCategoryService;
 import com.qww.carrent.service.CarService;
 import com.qww.carrent.service.OrderService;
 import com.qww.carrent.service.UserService;
@@ -42,11 +44,14 @@ public class OrderController {
     @Resource
     private CarService carService;
 
+    @Resource
+    private CarCategoryService carCategoryService;
+
     @PostMapping("/add")
     public BaseResponse<Boolean> addOrder(@RequestBody OrderAddRequest orderAddRequest,
                                           HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
-        Integer userId = loginUser.getId();
+        Integer userId =  orderAddRequest.getUserId() == null? loginUser.getId() : orderAddRequest.getUserId();
         loginUser = userService.getById(userId);
         if(StringUtils.isEmpty(loginUser.getAddress()) || StringUtils.isEmpty(loginUser.getPhone())) {
             User user = new User();
@@ -66,8 +71,10 @@ public class OrderController {
         order.setTotalPrice(car.getRentPrice().multiply(BigDecimal.valueOf(diffInDays + 1)));
         order.setRentalStartDate(rentalStartDate);
         order.setRentalEndDate(rentalEndDate);
-        boolean b = orderService.save(order);
-        return ResultUtils.success(b);
+        boolean b1 = orderService.save(order);
+        car.setStatus(2);
+        boolean b2 = carService.updateById(car);
+        return ResultUtils.success(b1 && b2);
     }
 
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
@@ -94,21 +101,65 @@ public class OrderController {
         return ResultUtils.success(orderVOList);
     }
 
+    @GetMapping("/list")
+    public BaseResponse<List<OrderVO>> listOrdersByGet() {
+        List<Order> orderList = orderService.list();
+        List<OrderVO> orderVOList = orderList.stream().map(order -> {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order, orderVO);
+            CarVO carVO = carService.getCarDetailById(order.getCarId());
+            orderVO.setCarVO(carVO);
+            orderVO.setUser(userService.getById(order.getUserId()));
+            orderVO.setRentalStartDate(new SimpleDateFormat("yyyy-MM-dd").format(order.getRentalStartDate()));
+            orderVO.setRentalEndDate(new SimpleDateFormat("yyyy-MM-dd").format(order.getRentalEndDate()));
+            return orderVO;
+        }).collect(Collectors.toList());
+        return ResultUtils.success(orderVOList);
+    }
+
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteOrder(@RequestBody DeleteRequest deleteRequest) {
-        Long id = deleteRequest.getId();
+        Integer id = deleteRequest.getId();
         boolean b = orderService.removeById(id);
         return ResultUtils.success(b);
     }
 
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    @PostMapping("/process")
-    public BaseResponse<Boolean> processOrder(@RequestBody DeleteRequest deleteRequest) {
-        Long id = deleteRequest.getId();
+    @PostMapping("/allowRental")
+    public BaseResponse<Boolean> allowRental(@RequestBody DeleteRequest deleteRequest) {
+        Integer id = deleteRequest.getId();
         Order order = orderService.getById(id);
+        // 订单状态改为正在进行
         order.setStatus(1);
         boolean b = orderService.updateById(order);
+        Car car = carService.getById(order.getCarId());
+        CarCategory carCategory = carCategoryService.getById(car.getCarCategoryId());
+        // 同类别的汽车的库存减1
+        carCategory.setStock(carCategory.getStock() - 1);
+        carCategoryService.updateById(carCategory);
+        // 汽车状态改为已出租
+        car.setStatus(1);
+        carService.updateById(car);
+        return ResultUtils.success(b);
+    }
+
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @PostMapping("/endRental")
+    public BaseResponse<Boolean> endRental(@RequestBody DeleteRequest deleteRequest) {
+        Integer id = deleteRequest.getId();
+        Order order = orderService.getById(id);
+        // 订单状态改为已处理
+        order.setStatus(2);
+        boolean b = orderService.updateById(order);
+        Car car = carService.getById(order.getCarId());
+        CarCategory carCategory = carCategoryService.getById(car.getCarCategoryId());
+        // 同类别的汽车的库存加1
+        carCategory.setStock(carCategory.getStock() + 1);
+        carCategoryService.updateById(carCategory);
+        // 汽车状态改为未出租
+        car.setStatus(0);
+        carService.updateById(car);
         return ResultUtils.success(b);
     }
 

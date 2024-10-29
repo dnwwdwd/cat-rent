@@ -1,20 +1,20 @@
 <template>
   <a-button type="primary" class="editable-add-btn" style="margin-bottom: 8px; margin-top: 12px" @click="handleAdd">
-    添加论坛
+    添加资讯
   </a-button>
-  <a-modal v-model:open="open" title="添加论坛" @ok="handleOk" cancelText="取消" okText="确认添加">
-    论坛名称：
-    <a-input v-model:value="formModal.name" class="a-input"/>
-    创建人 ID：
-    <a-input v-model:value="formModal.userId" class="a-input"/>
+  <a-modal v-model:open="open" title="添加资讯" @ok="handleOk" cancelText="取消" okText="确认添加">
+    资讯名称：
+    <a-input v-model:value="formModal.title" class="a-input"/>
+    资讯描述：
+    <a-input v-model:value="formModal.description" class="a-input"/>
     图片：
     <a-input v-model:value="formModal.imgUrl" class="a-input"/>
-    论坛描述：
-    <a-input v-model:value="formModal.description" class="a-input"/>
+    资讯内容：
+    <a-input v-model:value="formModal.content" class="a-input"/>
   </a-modal>
   <a-table :columns="columns" :data-source="dataSource" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['userId', 'name', 'imgUrl', 'description'].includes(column.dataIndex)">
+      <template v-if="['userId', 'title', 'imgUrl', 'description', 'content'].includes(column.dataIndex)">
         <div>
           <a-input
               v-if="editableData[record.key]"
@@ -55,7 +55,7 @@
 
 <script setup>
 import {cloneDeep} from 'lodash-es';
-import {reactive, ref, computed, onMounted} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import myAxios from "../../plugins/myAxios.js";
 import {message} from "ant-design-vue";
 
@@ -67,24 +67,29 @@ const columns = [
     width: '10%',
   },
   {
-    title: '论坛名称',
-    dataIndex: 'name',
-    width: '20%',
+    title: '资讯标题',
+    dataIndex: 'title',
+    width: '10%',
   },
   {
     title: '图片',
     dataIndex: 'imgUrl',
-    width: '25%',
+    width: '20%',
   },
   {
-    title: '描述',
+    title: '资讯描述',
     dataIndex: 'description',
     width: '20%',
   },
   {
+    title: '资讯内容',
+    dataIndex: 'content',
+    width: '30%',
+  },
+  {
     title: '操作',
     dataIndex: 'operation',
-    width: '15%'
+    width: '15%',
   },
 ];
 
@@ -103,7 +108,7 @@ const save = async (key) => {
   // 编辑保存后的新值
   const editedData = editableData[key];
   // 请求后端更新数据
-  const res = await myAxios.post('/pet/forum/update', editedData);
+  const res = await myAxios.post('/news/update', editedData);
   if (res.code === 0) {
     Object.assign(dataSource.value.find(item => item.key === key), editedData);
     message.success('修改成功');
@@ -124,7 +129,7 @@ const onDelete = async (key) => {
   const item = dataSource.value.find(item => item.key === key);
   console.log(item.id);
   // 请求后端删除数据
-  const res = await myAxios.post('/pet/forum/delete', {
+  const res = await myAxios.post('/news/delete', {
     id: item.id,
   });
   if (res.code === 0) {
@@ -137,9 +142,10 @@ const onDelete = async (key) => {
 
 const formModal = ref({
   userId: '',
-  name: '',
-  imgUrl: '',
+  title: '',
   description: '',
+  imgUrl: '',
+  content: '',
 });
 
 // 添加表格项
@@ -149,7 +155,7 @@ const handleAdd = () => {
 
 const handleOk = async () => {
   // 请求后端，添加表格项
-  const result = await myAxios.post('/pet/forum/add', formModal.value);
+  const result = await myAxios.post('/news/add', formModal.value);
   if (result.code == 0) {
     message.success('添加成功');
     open.value = false;
@@ -161,11 +167,11 @@ const handleOk = async () => {
 };
 
 const loadData = async () => {
-  const res = await myAxios.get('/pet/forum/list');
+  const res = await myAxios.get('/news/list');
   if (res.code === 0) {
     dataSource.value = res.data.map((item, index) => ({
       ...item,
-      key: index,
+      key: index, // 添加key属性，值从0开始递增
     }));
   }
 };

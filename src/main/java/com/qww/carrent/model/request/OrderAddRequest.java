@@ -14,6 +14,8 @@ public class OrderAddRequest implements Serializable {
      */
     private Integer carId;
 
+    private Integer userId;
+
     /**
      * 租赁开始时间
      */

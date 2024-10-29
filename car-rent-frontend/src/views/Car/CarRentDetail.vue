@@ -23,7 +23,7 @@
         <h3 style="font-size: 18px">颜色：{{ carVO.color }}</h3>
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3 style="font-size: 18px">是否已出租：{{ carVO.status === 0 ? '是' : '否' }}</h3>
-          <a-button style="color: #1E90FF" @click="showModal">租车</a-button>
+          <a-button v-if="carVO.status === 0" style="color: #1E90FF" @click="showModal">我要租车</a-button>
           <a-modal v-model:open="open" title="申请领养" :confirm-loading="confirmLoading" @ok="handleOk" ok-text="确认"
                    cancel-text="取消">
             联系方式：
@@ -63,11 +63,15 @@ const formModal = ref({
   address: '',
 });
 
-onMounted(async () => {
+const loadData = async () => {
   const res = await myAxios.get(`/car/detail/${id}`);
   if (res.data) {
     carVO.value = res.data;
   }
+};
+
+onMounted(async () => {
+  loadData()
 });
 
 const showModal = () => {
@@ -87,6 +91,7 @@ const handleOk = async () => {
     formModal.value.address = '';
     formModal.value.phone = '';
     date.value = null;
+    loadData();
   }
 };
 </script>

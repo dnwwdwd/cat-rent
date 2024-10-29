@@ -50,3 +50,19 @@ create table car_rent.car_detail
 )
     comment '汽车详情表';
 
+
+create table car_rent.news
+(
+    id          int auto_increment comment 'id'
+        primary key,
+    name        varchar(512)                       null comment '活动名称',
+    userId      int                                null comment '用户id',
+    description varchar(256)                       null comment '活动描述',
+    address     varchar(256)                       null comment '活动地点',
+    imgUrl      varchar(256)                       null comment '图片地址',
+    startTime   varchar(256)                       null comment '开始时间',
+    endTime     varchar(256)                       null comment '结束时间',
+    createTime  datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '修改时间'
+)
+    comment '资讯表';

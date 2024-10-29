@@ -20,7 +20,7 @@
           <router-link to="/order">我的订单</router-link>
         </a-menu-item>
         <a-menu-item key="4">
-          <router-link to="/activity">资讯</router-link>
+          <router-link to="/news">资讯</router-link>
         </a-menu-item>
       </a-menu>
 
@@ -32,7 +32,7 @@
         <template #overlay>
           <a-menu>
             <a-menu-item>
-              <router-link to="/admin/petManagement">后台管理</router-link>
+              <router-link to="/admin/carRentManagement" v-if="isAdmin">后台管理</router-link>
             </a-menu-item>
             <a-menu-item>
               <router-link to="/user/setting">个人设置</router-link>
@@ -65,7 +65,7 @@ import {getCurrentUser} from "../services/user.js";
 const selectedKeys = ref([]);
 
 const route = useRoute();
-
+const isAdmin = ref(false);
 const user = ref({});
 
 onMounted(async () => {
@@ -73,6 +73,7 @@ onMounted(async () => {
     const res = await getCurrentUser();
     if (res) {
       user.value = res;
+      isAdmin.value = user.value.userRole === "admin";
     }
   }
 });

@@ -4,19 +4,17 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-
 /**
- * 汽车表
- * @TableName car_category
+ * 资讯表
+ * @TableName news
  */
-@TableName(value ="car_category")
+@TableName(value ="news")
 @Data
-public class CarCategory implements Serializable {
+public class News implements Serializable {
     /**
      * id
      */
@@ -24,29 +22,29 @@ public class CarCategory implements Serializable {
     private Integer id;
 
     /**
-     * 品牌
+     * 资讯标题
      */
-    private String brand;
+    private String title;
 
     /**
-     * 车型
+     * 用户id
      */
-    private String type;
+    private Integer userId;
 
     /**
-     * 图片
+     * 资讯描述
+     */
+    private String description;
+
+    /**
+     * 资讯内容
+     */
+    private String content;
+
+    /**
+     * 图片地址
      */
     private String imgUrl;
-
-    /**
-     * 库存数量
-     */
-    private Integer stock;
-
-    /**
-     * 平均价格
-     */
-    private BigDecimal averagePrice;
 
     /**
      * 创建时间
@@ -54,13 +52,10 @@ public class CarCategory implements Serializable {
     private Date createTime;
 
     /**
-     * 更新时间
+     * 修改时间
      */
     private Date updateTime;
 
-    /**
-     * 是否删除（0 - 否 1 - 是）
-     */
     private Integer isDelete;
 
     @TableField(exist = false)

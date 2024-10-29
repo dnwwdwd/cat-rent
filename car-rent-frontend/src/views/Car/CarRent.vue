@@ -9,7 +9,10 @@
               style="height: 180px"
           />
         </template>
-        <a-card-meta :title="car.carNumber" :description="`成色：${car.quality} 单日租车价格：${car.rentPrice}`">
+        <a-card-meta :title="car.carNumber">
+          <template #description>
+            <div v-html="`成色：${car.quality} <br/> 日租价格：${car.rentPrice} <br/> ${car.color}`"/>
+          </template>
         </a-card-meta>
       </a-card>
     </a-flex>

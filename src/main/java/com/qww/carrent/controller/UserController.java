@@ -14,7 +14,6 @@ import com.qww.carrent.model.entity.User;
 import com.qww.carrent.model.vo.LoginUserVO;
 import com.qww.carrent.model.vo.UserVO;
 import com.qww.carrent.service.UserService;
-import com.qww.carrent.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.qww.carrent.service.impl.UserServiceImpl.SALT;
 
 /**
  * 用户接口
@@ -129,10 +131,10 @@ public class UserController {
         }
         User user = new User();
         BeanUtils.copyProperties(userAddRequest, user);
-        // 默认密码 12345678
-        String defaultPassword = "12345678";
-        String encryptPassword = DigestUtils.md5DigestAsHex((UserServiceImpl.SALT + defaultPassword).getBytes());
+        String password = userAddRequest.getUserPassword();
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
         user.setUserPassword(encryptPassword);
+        user.setUserRole(UserConstant.DEFAULT_ROLE);
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(user.getId());
@@ -158,22 +160,15 @@ public class UserController {
     /**
      * 更新用户
      *
-     * @param userUpdateRequest
-     * @param request
-     * @return
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
-        if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateRequest, user);
-        boolean result = userService.updateById(user);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
+    public BaseResponse<Boolean> updateUser(@RequestBody User user) {
+        User newUser = new User();
+        BeanUtils.copyProperties(user, newUser);
+        newUser.setUserPassword(DigestUtils.md5DigestAsHex((SALT + user.getUserPassword()).getBytes()));
+        boolean b = userService.updateById(newUser);
+        return ResultUtils.success(b);
     }
 
     /**
@@ -208,22 +203,11 @@ public class UserController {
         return ResultUtils.success(userService.getUserVO(user));
     }
 
-    /**
-     * 分页获取用户列表（仅管理员）
-     *
-     * @param userQueryRequest
-     * @param request
-     * @return
-     */
-    @PostMapping("/list/page")
+    @GetMapping("/list")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
-        long current = userQueryRequest.getCurrent();
-        long size = userQueryRequest.getPageSize();
-        Page<User> userPage = userService.page(new Page<>(current, size),
-                userService.getQueryWrapper(userQueryRequest));
-        return ResultUtils.success(userPage);
+    public BaseResponse<List<User>> listUserByPage() {
+        List<User> userList = userService.list();
+        return ResultUtils.success(userList);
     }
 
     /**
@@ -280,4 +264,11 @@ public class UserController {
         User loginUser = userService.getLoginUser(request);
         return ResultUtils.success(loginUser);
     }
+
+    @GetMapping("/list/id")
+    public BaseResponse<List<Integer>> listUserIds() {
+        List<Integer> ids = userService.list().stream().map(User::getId).collect(Collectors.toList());
+        return ResultUtils.success(ids);
+    }
+
 }

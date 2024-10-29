@@ -1,23 +1,23 @@
 <template>
   <div style="max-width: 80%; display: flex; justify-content: center; align-items: center; margin: auto; padding: 20px">
-    <div style="width: 200px; ">
+    <div style="width: 320px; ">
       <a-image
-          :width="200"
-          :height="270"
-          :src="petForumVO.imgUrl"
+          :width="290"
+          :height="400"
+          :src="newsVO.imgUrl"
           style="border-radius: 6%"
       />
     </div>
-    <div style="width: 60%; height: 300px; margin: 20px; border: 1px solid #e8e8e8;
-    border-radius: 5px; background-color: #f9f9f9; box-shadow: 8px 8px 8px rgba(255, 192, 203, 0.5);">
+    <div style="width: 60%; height: 450px; margin: 20px; border: 1px solid #e8e8e8;
+    border-radius: 5px; background-color: #f9f9f9; box-shadow: 8px 8px 8px rgba(173, 216, 230, 0.5);">
       <div style="padding: 20px; display: flex;">
-        <a-avatar :src="petForumVO.user.avatarUrl" />
-        <span style="font-size: 27px; margin-left: 10px">{{ petForumVO.name }}</span>
+        <a-avatar :src="newsVO.user.userAvatar"/>
+        <span style="font-size: 24px; margin-left: 10px">{{ newsVO.title }}</span>
       </div>
-      <a-divider />
       <div style="padding: 10px">
-        <h3 style="font-size: 20px">描述：{{ petForumVO.description }}</h3>
-        <h3 style="font-size: 20px">发帖人：{{ petForumVO.user.nickname }}</h3>
+        <h3 style="font-size: 20px;">描述：{{ newsVO.description }}</h3>
+        <span style="font-size: 20px;margin-top: 20px;">内容：</span>
+        <span style="font-size: 20px; color: black">{{ newsVO.content }}</span>
       </div>
     </div>
   </div>
@@ -32,14 +32,14 @@ const route = useRoute();
 
 const id = route.params.id;
 
-const petForumVO = ref({
+const newsVO = ref({
   user: {}
 });
 
 onMounted(async () => {
-  const res = await myAxios.get(`/pet/forum/detail/${id}`);
+  const res = await myAxios.get(`/news/detail/${id}`);
   if (res.data) {
-    petForumVO.value = res.data;
+    newsVO.value = res.data;
   }
 });
 

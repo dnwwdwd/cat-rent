@@ -2,7 +2,7 @@
   <div style="max-width: 80%; margin: auto;">
     <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData" bordered>
       <template #renderItem="{ item }">
-        <a-list-item key="item.title" @click="router.push(`/pet/forum/detail/${item.id}`)">
+        <a-list-item key="item.title" @click="router.push(`/news/detail/${item.id}`)">
           <template #extra>
             <img
                 height="100px"
@@ -11,13 +11,13 @@
                 :src="item.imgUrl"
             />
           </template>
-          <a-list-item-meta :description="item.name">
+          <a-list-item-meta :description="item.description">
             <template #title>
-              <a :href="item.href">{{ item.user.nickname }}</a>
+              <a :href="item.href">{{ item.title }}</a>
             </template>
-            <template #avatar><a-avatar :src="item.user.avatarUrl" /></template>
+            <template #avatar><a-avatar :src="item.user.userAvatar" /></template>
           </a-list-item-meta>
-          {{ item.description }}
+          {{ item.content }}
         </a-list-item>
       </template>
     </a-list>
@@ -40,7 +40,7 @@ const pagination = {
 };
 
 const loadData = async (page) => {
-  const res = await myAxios.get(`/pet/forum/list`, {
+  const res = await myAxios.get(`/news/list`, {
     pageSize: pagination.pageSize,
     pageNum: page,
   });

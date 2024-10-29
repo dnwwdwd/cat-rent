@@ -2,41 +2,35 @@
   <a-layout style="min-height: 100vh">
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px; margin-bottom: 5px;">
-        <img src="../assets/logo.png" width="52" height="50" style="margin-right: 10px;"/>
-        <span style="color: pink">基于Java的汽车租赁平台</span>
+        <img src="../assets/logo.png" width="32" height="30" style="margin-right: 10px;"/>
+        <span style="color: yellowgreen">基于Java的汽车租赁平台</span>
       </div>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="1">
-          <router-link to="/admin/petManagement">
+          <router-link to="/admin/carRentManagement">
             <RedditOutlined />
-            <span>宠物管理</span>
+            <span>汽车管理</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="2">
-          <router-link to="/admin/petAdoptManagement">
+          <router-link to="/admin/carCategoryManagement">
             <FormOutlined />
-            <span>宠物领养管理</span>
+            <span>汽车分类管理</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="3">
-          <router-link to="/admin/petDonateManagement">
+          <router-link to="/admin/orderManagement">
             <desktop-outlined />
-            <span>宠物捐赠管理</span>
+            <span>订单管理</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="4">
-          <router-link to="/admin/petForumManagement">
+          <router-link to="/admin/newsManagement">
             <CommentOutlined />
-            <span>宠物论坛管理</span>
+            <span>资讯管理</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="5">
-          <router-link to="/admin/activityManagement">
-            <VideoCameraAddOutlined />
-            <span>热门活动管理</span>
-          </router-link>
-        </a-menu-item>
-        <a-menu-item key="6">
           <router-link to="/admin/userManagement">
             <user-outlined />
             <span>用户管理</span>
@@ -52,7 +46,7 @@
             <a-dropdown >
               <a-avatar
                   shape="circle"
-                  :src="user.avatarUrl"
+                  :src="user.userAvatar"
               />
               <template #overlay>
                 <a-menu>
@@ -109,23 +103,20 @@ const user = ref({});
 watchEffect(() => {
   // 根据当前路由的 path 来设置选中的菜单项
   switch (route.path) {
-    case '/admin/petManagement':
+    case '/admin/carRentManagement':
       selectedKeys.value = ['1'];
       break;
-    case '/admin/petAdoptManagement':
+    case '/admin/carCategoryManagement':
       selectedKeys.value = ['2'];
       break;
-    case '/admin/petDonateManagement':
+    case '/admin/orderManagement':
       selectedKeys.value = ['3'];
       break;
-    case '/admin/petForumManagement':
+    case '/admin/newsManagement':
       selectedKeys.value = ['4'];
       break;
-    case '/admin/activityManagement':
-      selectedKeys.value = ['5'];
-      break;
     case '/admin/userManagement':
-      selectedKeys.value = ['6'];
+      selectedKeys.value = ['5'];
       break;
     default:
       // 如果没有匹配到任何菜单项，清空选中项

@@ -29,9 +29,9 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car>
     public CarVO getCarDetailById(Integer id) {
         Car car = this.getById(id);
         CarVO carVO = new CarVO();
-        BeanUtils.copyProperties(car, carVO);
         CarCategory carCategory = carCategoryService.getById(car.getCarCategoryId());
         BeanUtils.copyProperties(carCategory, carVO);
+        BeanUtils.copyProperties(car, carVO);
         return carVO;
     }
 }

@@ -1,24 +1,42 @@
 <template>
   <a-button type="primary" class="editable-add-btn" style="margin-bottom: 8px; margin-top: 12px" @click="handleAdd">
-    添加活动
+    添加订单
   </a-button>
-  <a-modal v-model:open="open" title="添加活动" @ok="handleOk" cancelText="取消" okText="确认添加">
-    活动名称：
-    <a-input v-model:value="formModal.name" class="a-input"/>
-    活动描述：
-    <a-input v-model:value="formModal.description" class="a-input"/>
-    图片：
-    <a-input v-model:value="formModal.imgUrl" class="a-input"/>
-    活动地址：
-    <a-input v-model:value="formModal.address" class="a-input"/>
-    开始时间：
-    <a-input v-model:value="formModal.startTime" class="a-input"/>
-    结束时间：
-    <a-input v-model:value="formModal.endTime" class="a-input"/>
+  <a-modal v-model:open="open" title="添加订单" @ok="handleOk" cancelText="取消" okText="确认添加">
+    <div style="display: flex; flex-direction: column;">
+      汽车 ID：
+      <a-select
+          v-model:value="formModal.carId"
+          style="width: 200px"
+          placeholder="请选择用户"
+      >
+        <a-select-option v-for="id in carIds" :key="id" :value="id">
+          {{ id }}
+        </a-select-option>
+      </a-select>
+      用户 ID：
+      <a-select
+          v-model:value="formModal.userId"
+          style="width: 200px"
+          placeholder="请选择用户"
+      >
+        <a-select-option v-for="id in userIds" :key="id" :value="id">
+          {{ id }}
+        </a-select-option>
+      </a-select>
+    </div>
+    <div style="margin-top: 8px">
+      租赁起始日期和结束日期；
+      <a-range-picker
+          v-model:value="date"
+          :placeholder="['租赁起始日期', '租赁结束日期']"
+      />
+    </div>
   </a-modal>
   <a-table :columns="columns" :data-source="dataSource" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['userId', 'name', 'imgUrl', 'description', 'address', 'startTime', 'endTime'].includes(column.dataIndex)">
+      <!-- 如果是可编辑字段，则显示编辑框 -->
+      <template v-if="['carId', 'userId', 'totalPrice', 'rentalStartDate', 'rentalEndDate'].includes(column.dataIndex)">
         <div>
           <a-input
               v-if="editableData[record.key]"
@@ -26,7 +44,7 @@
               style="margin: -5px 0"
           />
           <template v-else>
-            <template v-if="column.dataIndex === 'imgUrl'">
+            <template v-if="column.dataIndex === 'userAvatar'">
               <a-image :src="text" :height="150" :width="150"/>
             </template>
             <template v-else>
@@ -35,7 +53,8 @@
           </template>
         </div>
       </template>
-      <!-- 对 operation 字段显示编辑/保存/取消/删除操作 -->
+
+      <!-- 如果是 operation 字段，显示编辑、删除、允许租赁、结束租赁等操作按钮 -->
       <template v-else-if="column.dataIndex === 'operation'">
         <div class="editable-row-operations">
         <span v-if="editableData[record.key]">
@@ -49,11 +68,20 @@
           <a-popconfirm title="你确定删除吗？" @confirm="onDelete(record.key)" ok-text="确定" cancel-text="取消">
             <a>删除</a>
           </a-popconfirm>
+            <!-- 新增的“允许租赁”按钮 -->
+          <a-button v-if="record.status === 0" @click="allowRental(record)" type="primary" size="small" style="margin-left: 8px;">
+            允许租赁
+          </a-button>
+            <!-- 新增的“结束租赁”按钮 -->
+          <a-button v-if="record.status === 1" @click="endRental(record)" type="primary" size="small" style="margin-left: 8px;">
+            结束租赁
+          </a-button>
         </span>
         </div>
       </template>
     </template>
   </a-table>
+
 
 </template>
 
@@ -66,33 +94,28 @@ import {message} from "ant-design-vue";
 // 表格列定义
 const columns = [
   {
-    title: '活动名称',
-    dataIndex: 'name',
+    title: '汽车 ID',
+    dataIndex: 'carId',
     width: '10%',
   },
   {
-    title: '图片',
-    dataIndex: 'imgUrl',
+    title: '用户 ID',
+    dataIndex: 'userId',
     width: '10%',
   },
   {
-    title: '描述',
-    dataIndex: 'description',
+    title: '总价',
+    dataIndex: 'totalPrice',
     width: '10%',
   },
   {
-    title: '地址',
-    dataIndex: 'address',
+    title: '租期开始日期',
+    dataIndex: 'rentalStartDate',
     width: '10%',
   },
   {
-    title: '开始时间',
-    dataIndex: 'startTime',
-    width: '10%',
-  },
-  {
-    title: '结束时间',
-    dataIndex: 'endTime',
+    title: '租期结束日期',
+    dataIndex: 'rentalEndDate',
     width: '10%',
   },
   {
@@ -101,6 +124,11 @@ const columns = [
     width: '15%',
   },
 ];
+
+const date = ref();
+
+const carIds = ref([]);
+const userIds = ref([]);
 
 // 响应式数据源
 const dataSource = ref([]);
@@ -117,9 +145,9 @@ const save = async (key) => {
   // 编辑保存后的新值
   const editedData = editableData[key];
   // 请求后端更新数据
-  const res = await myAxios.post('/activity/update', editedData);
+  const res = await myAxios.post('/order/update', editedData);
   if (res.code === 0) {
-    Object.assign(dataSource.value.find(item => item.key === key), editedData);
+    loadData();
     message.success('修改成功');
   } else {
     message.error('修改失败');
@@ -138,7 +166,7 @@ const onDelete = async (key) => {
   const item = dataSource.value.find(item => item.key === key);
   console.log(item.id);
   // 请求后端删除数据
-  const res = await myAxios.post('/activity/delete', {
+  const res = await myAxios.post('/order/delete', {
     id: item.id,
   });
   if (res.code === 0) {
@@ -150,13 +178,8 @@ const onDelete = async (key) => {
 };
 
 const formModal = ref({
+  carId: '',
   userId: '',
-  name: '',
-  description: '',
-  imgUrl: '',
-  address: '',
-  startTime: '',
-  endTime: '',
 });
 
 // 添加表格项
@@ -165,10 +188,19 @@ const handleAdd = () => {
 };
 
 const handleOk = async () => {
+  console.log(formModal.value);
+  console.log(date.value)
   // 请求后端，添加表格项
-  const result = await myAxios.post('/activity/add', formModal.value);
+  const result = await myAxios.post('/order/add', {
+    ...formModal.value,
+    rentalStartDate: date.value[0],
+    rentalEndDate: date.value[1],
+  });
   if (result.code == 0) {
     message.success('添加成功');
+    formModal.value.userId = '';
+    formModal.value.carId = '';
+    date.value = null;
     open.value = false;
   } else {
     message.error('添加失败');
@@ -178,12 +210,20 @@ const handleOk = async () => {
 };
 
 const loadData = async () => {
-  const res = await myAxios.get('/activity/list');
-  if (res.code === 0) {
-    dataSource.value = res.data.map((item, index) => ({
+  const res1 = await myAxios.get('/order/list');
+  if (res1.code === 0) {
+    dataSource.value = res1.data.map((item, index) => ({
       ...item,
       key: index, // 添加key属性，值从0开始递增
     }));
+  }
+  const res2 = await myAxios.get('/car/list/id');
+  if (res2.code === 0) {
+    carIds.value = res2.data;
+  }
+  const res3 = await myAxios.get('/user/list/id');
+  if (res3.code === 0) {
+    userIds.value = res3.data;
   }
 };
 
@@ -191,6 +231,31 @@ const loadData = async () => {
 onMounted(async () => {
   loadData();
 });
+
+const allowRental = async (record) => {
+  const res = await myAxios.post('/order/allowRental', {
+    id: record.id,
+  });
+  if (res.code === 0) {
+    loadData();
+    message.success('操作成功');
+  } else {
+    message.error('操作失败');
+  }
+}
+
+const endRental = async (record) => {
+  const res = await myAxios.post('/order/endRental', {
+    id: record.id,
+  });
+  if (res.code === 0) {
+    loadData();
+    message.success('操作成功');
+  } else {
+    message.error('操作失败');
+  }
+};
+
 </script>
 
 <style scoped>
