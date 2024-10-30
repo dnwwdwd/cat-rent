@@ -15,6 +15,7 @@
         <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
     </resultMap>
 
+
     <sql id="Base_Column_List">
         id,
         userName,userAvatar,
